@@ -1,4 +1,4 @@
-# PAPT-reference-implementation
+# reference-implementation
 
 Reference implementation for Perturbation-Adapted Perturbation Theory
 

@@ -8,4 +8,4 @@ mp3
 {papt; core,1}
 mp3
 {fci,dump=be.fcidump;core,1;orbital,2100.2}
-system,PAPT-reference-implementation 'be.fcidump'
+system,reference-implementation 'be.fcidump'

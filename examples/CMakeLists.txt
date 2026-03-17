@@ -3,7 +3,7 @@ function(fcidump_test job e2 e3)
     if (${e3} EQUAL 0)
         unset(e3)
     endif ()
-    add_test(NAME ${nam} COMMAND PAPT.exe ${CMAKE_CURRENT_SOURCE_DIR}/${job} ${CMAKE_CURRENT_BINARY_DIR}/${job} ${e2} ${e3})
+    add_test(NAME ${nam} COMMAND ${CMAKE_PROJECT_NAME}.exe ${CMAKE_CURRENT_SOURCE_DIR}/${job} ${CMAKE_CURRENT_BINARY_DIR}/${job} ${e2} ${e3})
 endfunction()
 
 fcidump_test(c_valence.fcidump -0.08932979 -0.00082530)

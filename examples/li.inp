@@ -6,6 +6,6 @@ uhf
 uhf,accuracy=1e-12
 {ump2;core}
 !{fci,dump=li.fcidump;core}
-!system,PAPT-reference-implementation 'li.fcidump'
-plugin,command='/usr/local/bin/PAPT.exe'
+!system,reference-implementation 'li.fcidump'
+plugin,command='/usr/local/bin/reference-implementation.exe'
 rhf;{rccsd(t);core}
