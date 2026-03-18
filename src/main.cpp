@@ -29,7 +29,6 @@ Hamiltonian setup_hamiltonian(int argc, char** argv, molpro::PluginGuest molproP
 }
 
 
-
 int main(int argc, char* argv[]) {
   std::cout << std::fixed << std::setprecision(8);
   MPI_Init(&argc, &argv);
@@ -55,7 +54,8 @@ int main(int argc, char* argv[]) {
   std::cout << "MP3 energy contribution: " << emp3 << std::endl;
   std::cout << "MP3 energy: " << hamiltonian.e0 + hamiltonian.e1 + emp2 + emp3 << std::endl;
 
-  compute_papt_results(argc, argv, molproPlugin, hamiltonian, Kijab, amplitudes, MP1action12);
+  compute_papt_results(molproPlugin, hamiltonian, Kijab, amplitudes, MP1action12, argc > 3 ? std::stod(argv[3]) : 0, argc > 4 ? std::stod(argv[4]) : 0,
+                       argc > 2 ? argv[2] : "");
 
   MPI_Finalize();
   return 0;

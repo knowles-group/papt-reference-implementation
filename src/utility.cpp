@@ -31,8 +31,8 @@ void spin_orbital::result(const molpro::PluginGuest& molproPlugin, const std::st
   }
 }
 void utility::eigensolution_sort(Eigen::MatrixXd &vec, Eigen::VectorXd &val) {
-  std::cout << "initial eigenvectors\n" << vec << std::endl;
-  std::cout << "initial eigenvalues\n" << val << std::endl;
+  // std::cout << "initial eigenvectors\n" << vec << std::endl;
+  // std::cout << "initial eigenvalues\n" << val << std::endl;
   //  return;
   for (int i = 0; i < val.size(); ++i) {
     int jmax = i;
@@ -48,7 +48,7 @@ void utility::eigensolution_sort(Eigen::MatrixXd &vec, Eigen::VectorXd &val) {
   }
   // std::cout <<"should be zero:
   // "<<(vec*vec.transpose()-Eigen::MatrixXd::Identity(val.size(),val.size())).maxCoeff()<<std::endl;
-  std::cout << "final eigenvectors\n" << vec << std::endl;
-  std::cout << "final eigenvalues\n" << val << std::endl;
+  // std::cout << "final eigenvectors\n" << vec << std::endl;
+  // std::cout << "final eigenvalues\n" << val << std::endl;
   return;
 }
