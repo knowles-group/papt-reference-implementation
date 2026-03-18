@@ -16,5 +16,7 @@ spin_orbital::Hamiltonian PAPT_unpack(const Eigen::VectorXd& vector, size_t norb
 spin_orbital::Hamiltonian PAPT_unpack(const Eigen::VectorXd& vector,
                                       const spin_orbital::Hamiltonian& reference_operator);
 
+spin_orbital::Hamiltonian dress_hamiltonian(const spin_orbital::Hamiltonian& hamiltonian);
+
 } // namespace spin_orbital
 #endif // SPIN_ORBITAL__MANYBODY_H_
