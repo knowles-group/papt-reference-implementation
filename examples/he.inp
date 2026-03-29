@@ -1,0 +1,11 @@
+gthresh,energy=1e-14
+!symmetry,nosym
+basis,cc-pVDZ(p)
+geometry={Ne}
+rhf
+rhf,accuracy=1e-12
+{fci,dump=he.fcidump;core,0;orbital,2100.2}
+mp3
+{papt; core,0}
+mp3
+!system,PAPT-reference-implementation 'he.fcidump'

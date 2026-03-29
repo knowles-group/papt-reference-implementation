@@ -14,26 +14,9 @@ void compute_dress_results(molpro::PluginGuest& molproPlugin, Hamiltonian& hamil
   bool ip = false;
   bool ea = false;
 
-  const auto papt_rhs = PAPT_action(amplitudes, MP1action12);
+  auto papt_operator = spin_orbital::dress_hamiltonian(hamiltonian);
+if (false) {
 
-  auto papt_dimension = papt_rhs.rows();
-  Eigen::MatrixXd papt_kernel(papt_dimension, papt_dimension);
-  for (size_t i = 0; i < papt_dimension; ++i) {
-    Eigen::VectorXd value(papt_dimension);
-    value.setZero();
-    value[i] = 1;
-    auto line = PAPT_kernel_action(value, amplitudes);
-    for (size_t j = 0; j < papt_dimension; ++j)
-      papt_kernel(j, i) = line(j);
-  }
-
-  //  std::cout << "papt_rhs\n" << papt_rhs << std::endl;
-  //  std::cout << "papt_kernel\n" << papt_kernel << std::endl;
-  auto papt_solution = linsolve(papt_kernel, papt_rhs);
-  //  std::cout << "papt_solution\n" << papt_rhs << std::endl;
-
-  std::cout << "check: " << (papt_kernel * papt_solution - papt_rhs).norm() << std::endl;
-  auto papt_operator = PAPT_unpack(papt_solution, hamiltonian);
   auto solver_raw = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd>(
       Eigen::Map<Eigen::MatrixXd>(papt_operator.f.data(), papt_operator.norb, papt_operator.norb));
   Eigen::VectorXd eigval_raw = solver_raw.eigenvalues().eval();
@@ -48,6 +31,7 @@ void compute_dress_results(molpro::PluginGuest& molproPlugin, Hamiltonian& hamil
   //      "papt_operator.e0 " << papt_operator.e0 << std::endl;
   for (int i = 0; i < hamiltonian.norb; ++i)
     papt_operator.f(i, i) += (hamiltonian.e0 - hamiltonian.ecore - papt_operator.e0) / hamiltonian.nelec;
+}
   calculate_results("dressed", papt_operator, molproPlugin, hamiltonian, Kijab, amplitudes, reference_energy_2,
                     reference_energy_3, dump_file, ip, ea);
 }

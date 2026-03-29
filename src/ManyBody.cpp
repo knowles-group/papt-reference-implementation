@@ -143,37 +143,43 @@ Eigen::VectorXd spin_orbital::PAPT_kernel_action(const Eigen::VectorXd& potentia
   return PAPT_action(amplitudes, action);
 }
 
-spin_orbital::Hamiltonian dress_hamiltonian(const spin_orbital::Hamiltonian& hamiltonian) {
+spin_orbital::Hamiltonian spin_orbital::dress_hamiltonian(const spin_orbital::Hamiltonian& hamiltonian) {
   spin_orbital::Hamiltonian result = hamiltonian;
   auto no = hamiltonian.nelec;
   auto nv = hamiltonian.norb - no;
   spin_orbital::Amplitudes Kijab(hamiltonian);
   auto amplitudes = Kijab.MP1(hamiltonian);
+  std::cout << "initial Fock:\n" << result.f << std::endl;
+  // std::cout << "initial Kijab:\n" << Kijab.t2 << std::endl;
+  // std::cout << "initial amplitudes:\n" << amplitudes.t2 << std::endl;
+  // std::cout << "initial Hamiltonian:\n" << hamiltonian.dirac << std::endl;
   size_t off = 0;
   for (int i = 0; i < no; ++i)
     for (int j = 0; j < no; ++j) {
       for (int k = 0; k < no; ++k)
         for (int a = 0; a < nv; ++a)
-          for (int b = 0; b <= a; ++b)
+          for (int b = 0; b < nv; ++b)
             result.f(i, j) += 0.5 * amplitudes.t2(a, b, i, k) * Kijab.t2(a, b, k, j);
+  // std::cout << "Fock in IP:\n" << result.f << std::endl;
       for (int a = 0; a < nv; ++a)
         for (int m = 0; m < no; ++m)
-          for (int n = 0; m < no; ++n)
+          for (int n = 0; n < no; ++n)
             result.f(i, j) -= 0.5
                 * hamiltonian.dirac(i, a + no, m, n)
                 * hamiltonian.dirac(j, a + no, m, n)
                 / (
-                  hamiltonian.f(a + nv, a + nv)
+                  hamiltonian.f(a + no, a + no)
                   + hamiltonian.f(i, i)
                   - hamiltonian.f(m, m)
-                  - hamiltonian.f(n, m));
+                  - hamiltonian.f(n, n)+1e-24);
     }
   for (int i = 0; i < no; ++i)
     for (int j = 0; j < no; ++j)
       result.f(i, j) = 0.5 * (result.f(i, j) + result.f(j, i));
+  std::cout << "Fock after IP:\n" << result.f.slice(Eigen::array<Eigen::Index, 2>{0,0},Eigen::array<Eigen::Index, 2>{no,no}) << std::endl;
 
   for (int a = 0; a < nv; ++a)
-    for (int b = 0; b <= a; ++b)
+    for (int b = 0; b < nv; ++b)
       for (int c = 0; c < nv; ++c)
         for (int i = 0; i < no; ++i) {
           for (int j = 0; j < no; ++j)
@@ -182,11 +188,12 @@ spin_orbital::Hamiltonian dress_hamiltonian(const spin_orbital::Hamiltonian& ham
             result.f(a + no, b + no) -= 0.5 * hamiltonian.dirac(c + no, d + no, a + no, i) * hamiltonian.dirac(
                     c + no, d + no, b + no, i)
                 / (hamiltonian.f(c + no, c + no) + hamiltonian.f(d + no, d + no) - hamiltonian.f(a + no, a + no) -
-                   hamiltonian.f(i, i));
+                   hamiltonian.f(i, i)+1e-14);
         }
   for (int a = 0; a < nv; ++a)
-    for (int b = 0; b <= a; ++b)
+    for (int b = 0; b < nv; ++b)
       result.f(no + a, no + b) = 0.5 * (result.f(no + a, no + b) + result.f(no + b, no + a));
+  std::cout << "dressed Hamiltonian: " << result.f << std::endl;
   return result;
 }
 
